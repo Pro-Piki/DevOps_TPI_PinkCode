@@ -2,7 +2,12 @@
 
 **Proyecto:** Sistema integral para la gestión de recursos humanos de la empresa *Dos Robles*.  
 **Autor:** Pink Code.
-**Materia:** PPIV - Técnicatura Superior en Desarrollo de Software.
+
+**Materia:** Seminario de actualización: DevOps - Técnicatura Superior en Desarrollo de Software.
+
+---
+
+## Descripción 
 
 Desarrollo de un sistema de gestión de recursos humanos para la empresa Dos Robles, 
 que permita administrar la información de empleados, 
@@ -11,13 +16,10 @@ y generar reportes automáticos relacionados con ausencias, horas extra y licenc
 
 ---
 
-## Funcionalidades principales
+## Objetivo
 
-- Gestión de empleados y legajos digitales (registro, actualización y documentación).
-- Fichaje presencial y remoto (registro de entradas/salidas).
-- Solicitud y aprobación de licencias (flujo de aprobación y notificaciones).
-- Cálculo básico de nómina y emisión/descarga de recibos en PDF.
-- Roles y permisos (Admin, Empleado).
+Aplicar prácticas y herramientas clave de DevOps para desarrollar, contenerizar,
+automatizar, testear y desplegar una aplicación real en un entorno CI/CD.
 
 ---
 
@@ -101,6 +103,6 @@ PPIV_DosRobles_RRHH/
 
 ## Instalación y ejecución
 
-Seguir los pasos del Manual Técnico
+
 
 ---
