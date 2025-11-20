@@ -1,0 +1,19 @@
+services:
+  backend:
+    build: ./backend
+    container_name: backend_rrhh
+    env_file:
+      - ./backend/.env   # ubicación del archivo .env
+    ports:
+       - "4000:4000"    
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build: ./frontend/dosrobles-app
+    container_name: frontend_rrhh
+    ports:
+      - "3000:80"       # Frontend -> localhost:3000
+    depends_on:
+      - backend

@@ -20,15 +20,23 @@ const app = express();
 // Middlewares
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
+// Configuración dinámica de CORS
+const allowedOrigins = process.env.CORS_ORIGINS?.split(",") || [];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
     exposedHeaders: ["Content-Disposition", "Content-Type"],
   })
 );
-
 // Conectar a MongoDB
 connectDB();
 
