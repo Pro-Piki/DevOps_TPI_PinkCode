@@ -3,6 +3,7 @@
 import styles from "../styles/Sidebar.module.css";
 import { useNavigate, useLocation } from "react-router-dom";
 import React, { useState, forwardRef, useEffect } from "react";
+import API_BASE_URL from "../api/apiConfig.js";
 
 // MUI Icons
 import HomeIcon from "@mui/icons-material/Home";
@@ -75,7 +76,7 @@ const Sidebar = forwardRef(({ className, onItemClick }, ref) => {
             <div className={styles.avatar}>
               {user?.empleado?.imagenPerfil?.data ? (
                 <img
-                  src={`http://localhost:4000/api/empleados/${user.empleado._id}/imagen`}
+                  src={`${API_BASE_URL}/api/empleados/${user.empleado._id}/imagen`}
                   alt="Perfil"
                   style={{ width: "80px", height: "80px" }}
                   className={styles.avatarImg}

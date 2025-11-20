@@ -17,6 +17,7 @@ import {
 } from "../../components/ui/Buttons";
 import NuevoEmpleadoModal from "../../components/modales/NuevoEmpleadoModal";
 import FichaEmpleadoEditable from "./FichaEmpleadoEditable";
+import API_BASE_URL from "../api/apiConfig.js";
 
 const EmpleadosList = () => {
   const theme = useTheme();
@@ -33,8 +34,10 @@ const EmpleadosList = () => {
   const fetchEmpleados = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:4000/api/empleados");
+
+      const response = await fetch(`${API_BASE_URL}/empleados`);
       if (!response.ok) throw new Error("Error al obtener empleados");
+
       const data = await response.json();
       setEmpleados(data);
     } catch (error) {
@@ -60,12 +63,19 @@ const EmpleadosList = () => {
 
   const columns = isMobile
     ? ["", "Nombre y Apellido", "Ficha"]
-    : ["", "Nombre y Apellido", "Legajo", "Área de Trabajo", "Teléfono", "Ficha"];
+    : [
+        "",
+        "Nombre y Apellido",
+        "Legajo",
+        "Área de Trabajo",
+        "Teléfono",
+        "Ficha",
+      ];
 
   const rows = empleados.map((emp) => {
     // URL para servir la imagen desde backend si existe
     const imageUrl = emp.tieneImagen
-      ? `http://localhost:4000/api/empleados/${emp._id}/imagen`
+      ? `${API_BASE_URL}/empleados/${emp._id}/imagen`
       : null;
 
     return {
@@ -104,15 +114,22 @@ const EmpleadosList = () => {
         }}
       >
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" sx={{ fontWeight: 600, color: "#585858", mb: 1 }}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 600, color: "#585858", mb: 1 }}
+          >
             Empleados
           </Typography>
           <Typography variant="body2" sx={{ color: "#808080" }}>
-            Visualizá el listado completo de empleados y accedé a su información detallada
+            Visualizá el listado completo de empleados y accedé a su información
+            detallada
           </Typography>
         </Box>
 
-        <SecondaryButton startIcon={<EditIcon />} onClick={() => setModalOpen(true)}>
+        <SecondaryButton
+          startIcon={<EditIcon />}
+          onClick={() => setModalOpen(true)}
+        >
           Nuevo Empleado
         </SecondaryButton>
       </Box>

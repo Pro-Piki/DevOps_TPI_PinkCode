@@ -6,6 +6,7 @@ import ModalDialog from "../ui/ModalDialog";
 import { PrimaryButton, SecondaryButton } from "../ui/Buttons";
 import BaseInput from "../ui/BaseInput";
 import SelectInput from "../ui/SelectInput";
+import API_BASE_URL from "../api/apiConfig.js";
 
 const EditarUsuarioModal = ({ open, onClose, usuario, onUsuarioActualizado }) => {
   const [formData, setFormData] = useState({
@@ -56,7 +57,7 @@ const EditarUsuarioModal = ({ open, onClose, usuario, onUsuarioActualizado }) =>
         dataToSend.password = formData.password;
       }
 
-      const response = await fetch(`http://localhost:4000/api/users/${usuario._id}`, {
+      const response = await fetch(`${API_BASE_URL}/users/${usuario._id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(dataToSend),

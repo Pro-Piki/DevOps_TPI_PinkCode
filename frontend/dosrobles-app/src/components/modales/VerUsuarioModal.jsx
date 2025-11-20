@@ -7,6 +7,7 @@ import BaseInput from "../ui/BaseInput";
 import SelectInput from "../ui/SelectInput";
 import { Avatar } from "@mui/material";
 import { Typography } from "@mui/material";
+import API_BASE_URL from "../api/apiConfig.js";
 
 
 const VerUsuarioModal = ({ open, onClose, usuario, onEditar, onEliminar }) => {
@@ -18,7 +19,7 @@ const VerUsuarioModal = ({ open, onClose, usuario, onEditar, onEliminar }) => {
         {usuario.empleado && (
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
                 <Avatar
-                    src={`http://localhost:4000/api/empleados/${usuario.empleado._id}/imagen`}
+                    src={`${API_BASE_URL}/empleados/${usuario.empleado._id}/imagen`}
                     alt="Foto de perfil"
                     sx={{ width: 100, height: 100 }}
                 />

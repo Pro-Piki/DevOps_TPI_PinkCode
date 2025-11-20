@@ -1,11 +1,6 @@
 /* frontend/src/components/modales/NuevoEmpleadoModal.jsx */
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Stack,
-  Typography,
-  Alert,
-} from "@mui/material";
+import { Box, Stack, Typography, Alert } from "@mui/material";
 import ModalCard from "../ui/ModalCard";
 import ModalDialog from "../ui/ModalDialog";
 import {
@@ -21,6 +16,7 @@ import FormCard from "../ui/FormCard";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import API_BASE_URL from "../api/apiConfig.js";
 
 const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
   const [step, setStep] = useState(1);
@@ -74,11 +70,17 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
 
       const fetchNextLegajo = async () => {
         try {
-          const response = await fetch("http://localhost:4000/api/empleados/proximo-legajo");
+          const response = await fetch(
+            `${API_BASE_URL}/empleados/proximo-legajo`
+          );
           const data = await response.json();
+
           setNextLegajo(data.proximoLegajo || "Error");
-          // Guardar el legajo en formData para enviarlo al backend
-          setFormData((prev) => ({ ...prev, numeroLegajo: data.proximoLegajo }));
+
+          setFormData((prev) => ({
+            ...prev,
+            numeroLegajo: data.proximoLegajo,
+          }));
         } catch (error) {
           console.error("Error al obtener el próximo legajo:", error);
           setNextLegajo("Error");
@@ -123,29 +125,38 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
       if (!formData.tipoDocumento || !formData.numeroDocumento.trim())
         return setErrorMessage("Seleccione tipo y número de documento."), false;
 
-      if (!/^\d+$/.test(formData.numeroDocumento)) 
-        return setErrorMessage("El número de documento debe contener solo dígitos."), false;
-         
-      if (!formData.cuil.trim())
-        return setErrorMessage("Ingrese CUIL."), false;
+      if (!/^\d+$/.test(formData.numeroDocumento))
+        return (
+          setErrorMessage("El número de documento debe contener solo dígitos."),
+          false
+        );
+
+      if (!formData.cuil.trim()) return setErrorMessage("Ingrese CUIL."), false;
 
       if (!/^\d{11}$/.test(formData.cuil))
         return setErrorMessage("El CUIL debe tener 11 dígitos."), false;
 
-      if (formData.telefono && !/^\+?\d{7,15}$/.test(formData.telefono)) 
-        return setErrorMessage("El teléfono debe contener entre 7 y 15 dígitos (puede incluir +)."), false;
-         
+      if (formData.telefono && !/^\+?\d{7,15}$/.test(formData.telefono))
+        return (
+          setErrorMessage(
+            "El teléfono debe contener entre 7 y 15 dígitos (puede incluir +)."
+          ),
+          false
+        );
+
       if (formData.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
         return setErrorMessage("Formato de email inválido."), false;
 
       if (!formData.fechaNacimiento)
         return setErrorMessage("Debe indicar la fecha de nacimiento."), false;
-         
+
       const nacimiento = new Date(formData.fechaNacimiento);
       const hoy = new Date();
-      if (nacimiento > hoy) 
-        return setErrorMessage("La fecha de nacimiento no puede ser futura."), false;
-         
+      if (nacimiento > hoy)
+        return (
+          setErrorMessage("La fecha de nacimiento no puede ser futura."), false
+        );
+
       return true;
     }
 
@@ -194,10 +205,21 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
         return setErrorMessage("El CBU debe tener 22 dígitos."), false;
 
       if (!formData.vencimientoContrato)
-        return setErrorMessage("Debe indicar la fecha de vencimiento de contrato."), false;
+        return (
+          setErrorMessage("Debe indicar la fecha de vencimiento de contrato."),
+          false
+        );
 
-      if (formData.vencimientoContrato && new Date(formData.vencimientoContrato) < new Date(formData.fechaAlta))
-        return setErrorMessage("El vencimiento no puede ser anterior a la fecha de alta."), false;
+      if (
+        formData.vencimientoContrato &&
+        new Date(formData.vencimientoContrato) < new Date(formData.fechaAlta)
+      )
+        return (
+          setErrorMessage(
+            "El vencimiento no puede ser anterior a la fecha de alta."
+          ),
+          false
+        );
 
       if (!formData.categoriaImpositiva)
         return setErrorMessage("Seleccione categoría impositiva."), false;
@@ -208,14 +230,16 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
     return true;
   };
 
-  // Verificar duplicado 
+  // Verificar duplicado
   const verificarDuplicado = async () => {
     try {
       const params = new URLSearchParams({
         numeroDocumento: formData.numeroDocumento || "",
         cuil: formData.cuil || "",
       });
-      const res = await fetch(`http://localhost:4000/api/empleados/verificar-duplicado?${params.toString()}`);
+      const res = await fetch(
+        `${API_BASE_URL}/empleados/verificar-duplicado?${params.toString()}`
+      );
       if (!res.ok) return false;
       const json = await res.json();
       return !!json.duplicado;
@@ -225,7 +249,7 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
     }
   };
 
-   // VALIDACIÓN FINAL GLOBAL
+  // VALIDACIÓN FINAL GLOBAL
   const validateFinal = () => {
     if (!validateStep(1) || !validateStep(2) || !validateStep(3)) return false;
     return true;
@@ -242,13 +266,17 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
     const esDuplicado = await verificarDuplicado();
     if (esDuplicado) {
       setLoading(false);
-      return setErrorMessage("Ya existe un empleado con ese número de documento o CUIL.");
+      return setErrorMessage(
+        "Ya existe un empleado con ese número de documento o CUIL."
+      );
     }
 
     try {
       const dataToSend = new FormData();
       for (const [key, value] of Object.entries(formData)) {
-        if (["fechaAlta", "vencimientoContrato", "fechaNacimiento"].includes(key)) {
+        if (
+          ["fechaAlta", "vencimientoContrato", "fechaNacimiento"].includes(key)
+        ) {
           dataToSend.append(key, fixLocalDate(value));
         } else {
           dataToSend.append(key, value ?? "");
@@ -256,13 +284,14 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
       }
       if (imagenPerfil) dataToSend.append("imagenPerfil", imagenPerfil);
 
-      const response = await fetch("http://localhost:4000/api/empleados", {
+      const response = await fetch(`${API_BASE_URL}/empleados`, {
         method: "POST",
         body: dataToSend,
       });
 
       const result = await response.json();
-      if (!response.ok) throw new Error(result?.error || "Error al registrar empleado");
+      if (!response.ok)
+        throw new Error(result?.error || "Error al registrar empleado");
 
       setNotificationTitle("✅ Éxito");
       setNotificationMessage("Empleado registrado con éxito");
@@ -292,15 +321,26 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
     onClose();
   };
 
-  // Render de pasos completo 
+  // Render de pasos completo
   const renderStep = () => {
     switch (step) {
       case 1:
         return (
           <Box>
-            {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
+            {errorMessage && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {errorMessage}
+              </Alert>
+            )}
 
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
               {/* Imagen de perfil */}
               <Box
                 sx={{
@@ -320,7 +360,15 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
                 onClick={() => document.getElementById("fileInput").click()}
               >
                 {preview ? (
-                  <img src={preview} alt="preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img
+                    src={preview}
+                    alt="preview"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                    }}
+                  />
                 ) : (
                   <AddAPhotoIcon sx={{ fontSize: 40, color: "#7FC6BA" }} />
                 )}
@@ -336,14 +384,26 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
               <DateField
                 label="Fecha de nacimiento"
                 value={formData.fechaNacimiento}
-                onChange={(e) => handleChange("fechaNacimiento", e.target.value)}
+                onChange={(e) =>
+                  handleChange("fechaNacimiento", e.target.value)
+                }
               />
             </Box>
 
             <FormCard title="Datos personales" sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <BaseInput label="Nombre" value={formData.nombre} onChange={(e) => handleChange("nombre", e.target.value)} fullWidth />
-                <BaseInput label="Apellido" value={formData.apellido} onChange={(e) => handleChange("apellido", e.target.value)} fullWidth />
+                <BaseInput
+                  label="Nombre"
+                  value={formData.nombre}
+                  onChange={(e) => handleChange("nombre", e.target.value)}
+                  fullWidth
+                />
+                <BaseInput
+                  label="Apellido"
+                  value={formData.apellido}
+                  onChange={(e) => handleChange("apellido", e.target.value)}
+                  fullWidth
+                />
 
                 <Box sx={{ display: "flex", gap: 2 }}>
                   <SelectInput
@@ -353,25 +413,46 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
                       { label: "Pasaporte", value: "pasaporte" },
                     ]}
                     value={formData.tipoDocumento}
-                    onChange={(e) => handleChange("tipoDocumento", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("tipoDocumento", e.target.value)
+                    }
                     fullWidth
                   />
                   <BaseInput
                     label="Número"
                     value={formData.numeroDocumento}
-                    onChange={(e) => handleChange("numeroDocumento", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("numeroDocumento", e.target.value)
+                    }
                     fullWidth
                   />
                 </Box>
 
-                <BaseInput label="CUIL" value={formData.cuil} onChange={(e) => handleChange("cuil", e.target.value)} fullWidth />
-                <BaseInput label="Teléfono" value={formData.telefono} onChange={(e) => handleChange("telefono", e.target.value)} fullWidth />
-                <BaseInput label="Email" value={formData.email} onChange={(e) => handleChange("email", e.target.value)} fullWidth />
+                <BaseInput
+                  label="CUIL"
+                  value={formData.cuil}
+                  onChange={(e) => handleChange("cuil", e.target.value)}
+                  fullWidth
+                />
+                <BaseInput
+                  label="Teléfono"
+                  value={formData.telefono}
+                  onChange={(e) => handleChange("telefono", e.target.value)}
+                  fullWidth
+                />
+                <BaseInput
+                  label="Email"
+                  value={formData.email}
+                  onChange={(e) => handleChange("email", e.target.value)}
+                  fullWidth
+                />
               </Stack>
             </FormCard>
 
             <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
-              <NextButton onClick={handleNext} endIcon={<ArrowForwardIcon />}>Siguiente</NextButton>
+              <NextButton onClick={handleNext} endIcon={<ArrowForwardIcon />}>
+                Siguiente
+              </NextButton>
             </Box>
           </Box>
         );
@@ -379,7 +460,11 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
       case 2:
         return (
           <Box>
-            {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
+            {errorMessage && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {errorMessage}
+              </Alert>
+            )}
 
             <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
               <DateField
@@ -404,7 +489,9 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
                       { label: "Diseño", value: "diseno" },
                     ]}
                     value={formData.areaTrabajo}
-                    onChange={(e) => handleChange("areaTrabajo", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("areaTrabajo", e.target.value)
+                    }
                     fullWidth
                   />
                   <BaseInput
@@ -461,9 +548,20 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
               </Stack>
             </FormCard>
 
-            <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 2 }}>
-              <PrevButton onClick={handlePrev} startIcon={<ArrowBackIcon />}>Anterior</PrevButton>
-              <NextButton onClick={handleNext} endIcon={<ArrowForwardIcon />}>Siguiente</NextButton>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: 2,
+                mt: 2,
+              }}
+            >
+              <PrevButton onClick={handlePrev} startIcon={<ArrowBackIcon />}>
+                Anterior
+              </PrevButton>
+              <NextButton onClick={handleNext} endIcon={<ArrowForwardIcon />}>
+                Siguiente
+              </NextButton>
             </Box>
           </Box>
         );
@@ -471,12 +569,29 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
       case 3:
         return (
           <Box>
-            {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
+            {errorMessage && (
+              <Alert severity="error" sx={{ mb: 2 }}>
+                {errorMessage}
+              </Alert>
+            )}
 
             <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
-              <Box sx={{ border: "2px solid #7FC6BA", borderRadius: 2, px: 2, py: 1, width: "fit-content", textAlign: "center" }}>
-                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>Nº de Legajo</Typography>
-                <Typography variant="body1" sx={{ color: "#808080" }}>{nextLegajo}</Typography>
+              <Box
+                sx={{
+                  border: "2px solid #7FC6BA",
+                  borderRadius: 2,
+                  px: 2,
+                  py: 1,
+                  width: "fit-content",
+                  textAlign: "center",
+                }}
+              >
+                <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
+                  Nº de Legajo
+                </Typography>
+                <Typography variant="body1" sx={{ color: "#808080" }}>
+                  {nextLegajo}
+                </Typography>
               </Box>
             </Box>
 
@@ -492,7 +607,9 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
                       { label: "Por proyecto", value: "proyecto" },
                     ]}
                     value={formData.tipoRemuneracion}
-                    onChange={(e) => handleChange("tipoRemuneracion", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("tipoRemuneracion", e.target.value)
+                    }
                     fullWidth
                   />
                   <BaseInput
@@ -500,7 +617,9 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
                     type="number"
                     fullWidth
                     value={formData.sueldoBruto}
-                    onChange={(e) => handleChange("sueldoBruto", e.target.value)}
+                    onChange={(e) =>
+                      handleChange("sueldoBruto", e.target.value)
+                    }
                   />
                 </Box>
 
@@ -518,13 +637,20 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
                     onChange={(e) => handleChange("banco", e.target.value)}
                     fullWidth
                   />
-                  <BaseInput label="CBU" fullWidth value={formData.cbu} onChange={(e) => handleChange("cbu", e.target.value)} />
+                  <BaseInput
+                    label="CBU"
+                    fullWidth
+                    value={formData.cbu}
+                    onChange={(e) => handleChange("cbu", e.target.value)}
+                  />
                 </Box>
 
                 <DateField
                   label="Fecha de vencimiento del contrato"
                   value={formData.vencimientoContrato}
-                  onChange={(e) => handleChange("vencimientoContrato", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("vencimientoContrato", e.target.value)
+                  }
                   fullWidth
                 />
 
@@ -537,17 +663,43 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
                     { label: "Honorarios", value: "honorarios" },
                   ]}
                   value={formData.categoriaImpositiva}
-                  onChange={(e) => handleChange("categoriaImpositiva", e.target.value)}
+                  onChange={(e) =>
+                    handleChange("categoriaImpositiva", e.target.value)
+                  }
                   fullWidth
                 />
               </Stack>
             </FormCard>
 
-            <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between", mt: 3 }}>
-              <PrevButton onClick={handlePrev} startIcon={<ArrowBackIcon />} sx={{ minWidth: 40, padding: "6px 6px" }} />
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                mt: 3,
+              }}
+            >
+              <PrevButton
+                onClick={handlePrev}
+                startIcon={<ArrowBackIcon />}
+                sx={{ minWidth: 40, padding: "6px 6px" }}
+              />
               <Box sx={{ display: "flex", gap: 2 }}>
-                <SecondaryButton onClick={onClose} width={120} height={40} fontWeight="bold">Cancelar</SecondaryButton>
-                <PrimaryButton onClick={handleSubmit} disabled={loading} width={120} height={40} fontWeight="bold">
+                <SecondaryButton
+                  onClick={onClose}
+                  width={120}
+                  height={40}
+                  fontWeight="bold"
+                >
+                  Cancelar
+                </SecondaryButton>
+                <PrimaryButton
+                  onClick={handleSubmit}
+                  disabled={loading}
+                  width={120}
+                  height={40}
+                  fontWeight="bold"
+                >
                   {loading ? "Guardando..." : "Guardar"}
                 </PrimaryButton>
               </Box>
@@ -562,7 +714,12 @@ const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
 
   return (
     <>
-      <ModalCard open={open} onClose={onClose} title="Agregar empleado" width={700}>
+      <ModalCard
+        open={open}
+        onClose={onClose}
+        title="Agregar empleado"
+        width={700}
+      >
         {renderStep()}
       </ModalCard>
 

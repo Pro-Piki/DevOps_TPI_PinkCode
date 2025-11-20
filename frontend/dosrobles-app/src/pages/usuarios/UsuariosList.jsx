@@ -20,7 +20,7 @@ import {
 import NuevoUsuarioModal from "../../components/modales/NuevoUsuarioModal";
 import VerUsuarioModal from "../../components/modales/VerUsuarioModal";
 import EditarUsuarioModal from "../../components/modales/EditarUsuarioModal";
-
+import API_BASE_URL from "../api/apiConfig.js";
 
 const UsuariosList = () => {
   const theme = useTheme();
@@ -44,12 +44,13 @@ const UsuariosList = () => {
   const [confirmMessage, setConfirmMessage] = useState("");
   const [confirmCallback, setConfirmCallback] = useState(null);
 
-
   const fetchUsuarios = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:4000/api/users");
+
+      const response = await fetch(`${API_BASE_URL}/users`);
       if (!response.ok) throw new Error("Error al obtener usuarios");
+
       const data = await response.json();
       setUsuarios(data);
     } catch (error) {
@@ -64,7 +65,12 @@ const UsuariosList = () => {
   }, []);
 
   // Mostrar notificación modal
-  const showNotification = (title, message, type = "success", callback = null) => {
+  const showNotification = (
+    title,
+    message,
+    type = "success",
+    callback = null
+  ) => {
     setNotificationTitle(title);
     setNotificationMessage(message);
     setNotificationType(type);
@@ -114,9 +120,12 @@ const UsuariosList = () => {
         if (!confirmed) return;
 
         try {
-          const response = await fetch(`http://localhost:4000/api/users/${usuario._id}`, {
-            method: "DELETE",
-          });
+          const response = await fetch(
+            `${API_BASE_URL}/users/${usuario._id}`,
+            {
+              method: "DELETE",
+            }
+          );
           if (!response.ok) throw new Error("Error al eliminar usuario");
 
           showNotification(
@@ -130,11 +139,7 @@ const UsuariosList = () => {
           );
         } catch (error) {
           console.error(error);
-          showNotification(
-            "Error",
-            "No se pudo eliminar el usuario",
-            "error"
-          );
+          showNotification("Error", "No se pudo eliminar el usuario", "error");
         }
       }
     );
@@ -151,8 +156,8 @@ const UsuariosList = () => {
           sx={{ width: 40, height: 40 }}
           src={
             user.empleado?.imagenPerfil?.data
-            ? `http://localhost:4000/api/empleados/${user.empleado._id}/imagen`
-            : undefined
+              ? `${API_BASE_URL}/empleados/${user.empleado._id}/imagen`
+              : undefined
           }
         >
           {user.username.charAt(0).toUpperCase()}
@@ -184,15 +189,22 @@ const UsuariosList = () => {
         }}
       >
         <Box sx={{ mb: 3 }}>
-          <Typography variant="h4" sx={{ fontWeight: 600, color: "#585858", mb: 1 }}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 600, color: "#585858", mb: 1 }}
+          >
             Usuarios
           </Typography>
           <Typography variant="body2" sx={{ color: "#808080" }}>
-            Visualizá el listado completo de usuarios y accedé a su información detallada
+            Visualizá el listado completo de usuarios y accedé a su información
+            detallada
           </Typography>
         </Box>
 
-        <SecondaryButton startIcon={<EditIcon />} onClick={() => setModalOpen(true)}>
+        <SecondaryButton
+          startIcon={<EditIcon />}
+          onClick={() => setModalOpen(true)}
+        >
           Nuevo Usuario
         </SecondaryButton>
       </Box>
@@ -237,11 +249,6 @@ const UsuariosList = () => {
         onEditar={() => {
           setEditarModalOpen(true);
         }}
-
-        // onEditar={() => {
-        //   setModalOpen(true);
-        //   setUsuarioSeleccionado(null);
-        // }}
         onEliminar={() => handleEliminarUsuario(usuarioSeleccionado)}
       />
 
@@ -295,4 +302,3 @@ const UsuariosList = () => {
 };
 
 export default UsuariosList;
-

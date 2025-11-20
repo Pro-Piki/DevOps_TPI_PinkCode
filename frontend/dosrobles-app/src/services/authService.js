@@ -1,4 +1,8 @@
-const API_URL = "http://localhost:4000/api/auth";
+// frontend/dosrobles-app/src/services/authService.js
+
+import API_BASE_URL from "../api/apiConfig";
+
+const API_URL = `${API_BASE_URL}/auth`;
 
 export const authService = {
   // Login
@@ -36,7 +40,6 @@ export const authService = {
     try {
       const token = localStorage.getItem("token");
 
-      // Llamar a la API de logout para validar y registrar
       if (token) {
         await fetch(`${API_URL}/logout`, {
           method: "POST",
@@ -48,9 +51,7 @@ export const authService = {
       }
     } catch (error) {
       console.warn("Advertencia en logout API:", error);
-      // No bloquear logout si hay error en la API
     } finally {
-      // Siempre limpiar localStorage, incluso si hay error en la API
       localStorage.clear();
       console.log("✅ Sesión cerrada localmente");
     }
@@ -80,18 +81,18 @@ export const authService = {
     }
   },
 
-  // Obtener usuario del localStorage
+  // Obtener usuario
   getUser: () => {
     const user = localStorage.getItem("user");
     return user ? JSON.parse(user) : null;
   },
 
-  // Obtener token del localStorage
+  // Obtener token
   getToken: () => {
     return localStorage.getItem("token");
   },
 
-  // Verificar si está autenticado
+  // Verificar autenticación
   isAuthenticated: () => {
     return !!localStorage.getItem("token");
   },

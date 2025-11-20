@@ -16,6 +16,7 @@ import CustomTable from "../../components/ui/CustomTable";
 import SearchBar from "../../components/ui/SearchBar";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate, useLocation } from "react-router-dom";
+import API_BASE_URL from "../api/apiConfig.js";
 
 const meses = [
   "Enero",
@@ -70,7 +71,7 @@ const FichajeEmpleados = () => {
       try {
         const mesNumero = meses.indexOf(mes) + 1; // Enero=1, Febrero=2...
         const response = await fetch(
-          `http://localhost:4000/api/fichajes/empleados-mes?mes=${mesNumero}&anio=${anio}`
+          `${API_BASE_URL}/fichajes/empleados-mes?mes=${mesNumero}&anio=${anio}`
         );
         if (!response.ok) throw new Error("Error al obtener fichajes");
         const data = await response.json();

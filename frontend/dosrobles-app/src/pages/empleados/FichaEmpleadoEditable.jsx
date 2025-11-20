@@ -5,6 +5,7 @@ import ModalDialog from "../../components/ui/ModalDialog";
 import FichaEmpleadoBase from "./FichaEmpleadoBase";
 import SendMessageModal from "../../components/modales/SendMessageModal";
 import { CircularProgress, Box } from "@mui/material";
+import API_BASE_URL from "../api/apiConfig.js";
 
 const FichaEmpleadoEditable = ({ open, onClose, empleado, onEmpleadoActualizado }) => {
   const [empleadoData, setEmpleadoData] = useState(null);
@@ -58,7 +59,7 @@ const FichaEmpleadoEditable = ({ open, onClose, empleado, onEmpleadoActualizado 
       estado: backendData.estado || "activo",
       foto:
         backendData._id
-          ? `http://localhost:4000/api/empleados/${backendData._id}/imagen?${Date.now()}`
+          ? `${API_BASE_URL}/empleados/${backendData._id}/imagen?${Date.now()}`
           : "/src/assets/empleados/default-avatar.png",
     };
 
@@ -71,7 +72,7 @@ const FichaEmpleadoEditable = ({ open, onClose, empleado, onEmpleadoActualizado 
       const fetchEmpleado = async () => {
         try {
           setLoading(true);
-          const res = await fetch(`http://localhost:4000/api/empleados/${empleado._id}`);
+          const res = await fetch(`${API_BASE_URL}/empleados/${empleado._id}`);
           if (!res.ok) throw new Error("Error al obtener empleado");
           const data = await res.json();
 
@@ -158,7 +159,7 @@ const FichaEmpleadoEditable = ({ open, onClose, empleado, onEmpleadoActualizado 
       if (nuevaFoto) formData.append("imagenPerfil", nuevaFoto);
 
       const res = await fetch(
-        `http://localhost:4000/api/empleados/${empleadoData._id}`,
+        `${API_BASE_URL}/empleados/${empleadoData._id}`,
         {
           method: "PUT",
           body: formData,
@@ -169,7 +170,7 @@ const FichaEmpleadoEditable = ({ open, onClose, empleado, onEmpleadoActualizado 
 
       // Refrescar los datos del empleado para ver la nueva imagen
       const refreshed = await fetch(
-        `http://localhost:4000/api/empleados/${empleadoData._id}`
+        `${API_BASE_URL}/empleados/${empleadoData._id}`
       );
       const updated = await refreshed.json();
 
@@ -225,7 +226,7 @@ const FichaEmpleadoEditable = ({ open, onClose, empleado, onEmpleadoActualizado 
     try {
       setPendingDelete(true);
       const res = await fetch(
-        `http://localhost:4000/api/empleados/${empleadoData._id}`,
+        `${API_BASE_URL}/empleados/${empleadoData._id}`,
         {
           method: "DELETE",
         }

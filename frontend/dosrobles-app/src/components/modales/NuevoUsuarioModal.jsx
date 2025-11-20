@@ -3,12 +3,10 @@ import React, { useState, useEffect } from "react";
 import { Box, Stack, Typography, Alert } from "@mui/material";
 import ModalCard from "../ui/ModalCard";
 import ModalDialog from "../ui/ModalDialog";
-import {
-  PrimaryButton,
-  SecondaryButton,
-} from "../ui/Buttons";
+import { PrimaryButton, SecondaryButton } from "../ui/Buttons";
 import BaseInput from "../ui/BaseInput";
 import SelectInput from "../ui/SelectInput";
+import API_BASE_URL from "../api/apiConfig.js";
 
 const NuevoUsuarioModal = ({ open, onClose, onUsuarioGuardado }) => {
   const [formData, setFormData] = useState({
@@ -50,14 +48,15 @@ const NuevoUsuarioModal = ({ open, onClose, onUsuarioGuardado }) => {
 
     setLoading(true);
     try {
-      const response = await fetch("http://localhost:4000/api/users/register", {
+      const response = await fetch(`${API_BASE_URL}/users/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       const data = await response.json();
-      if (!response.ok) throw new Error(data.message || "Error al registrar usuario");
+      if (!response.ok)
+        throw new Error(data.message || "Error al registrar usuario");
 
       setNotificationTitle("Éxito");
       setNotificationMessage("Usuario registrado correctamente");
@@ -78,9 +77,18 @@ const NuevoUsuarioModal = ({ open, onClose, onUsuarioGuardado }) => {
 
   return (
     <>
-      <ModalCard open={open} onClose={onClose} title="Nuevo Usuario" width={500}>
+      <ModalCard
+        open={open}
+        onClose={onClose}
+        title="Nuevo Usuario"
+        width={500}
+      >
         <Box sx={{ mt: 2 }}>
-          {errorMessage && <Alert severity="error" sx={{ mb: 2 }}>{errorMessage}</Alert>}
+          {errorMessage && (
+            <Alert severity="error" sx={{ mb: 2 }}>
+              {errorMessage}
+            </Alert>
+          )}
           <Stack spacing={2}>
             <BaseInput
               label="Número de legajo"
@@ -113,7 +121,9 @@ const NuevoUsuarioModal = ({ open, onClose, onUsuarioGuardado }) => {
             />
           </Stack>
 
-          <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}>
+          <Box
+            sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 3 }}
+          >
             <SecondaryButton onClick={onClose}>Cancelar</SecondaryButton>
             <PrimaryButton onClick={handleSubmit} disabled={loading}>
               {loading ? "Guardando..." : "Guardar"}
@@ -141,6 +151,3 @@ const NuevoUsuarioModal = ({ open, onClose, onUsuarioGuardado }) => {
 };
 
 export default NuevoUsuarioModal;
-
-
-

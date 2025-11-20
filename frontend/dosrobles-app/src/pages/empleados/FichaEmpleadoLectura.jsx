@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import FichaEmpleadoBase from "./FichaEmpleadoBase";
+import API_BASE_URL from "../api/apiConfig.js";
 
 const FichaEmpleadoLectura = ({ open, onClose }) => {
   const [empleadoData, setEmpleadoData] = useState(null);
@@ -33,7 +34,7 @@ const FichaEmpleadoLectura = ({ open, onClose }) => {
         vencimientoContrato: empleado.vencimientoContrato || "",
         categoriaImpositiva: empleado.categoriaImpositiva || "",
         foto: empleado.imagenPerfil?.data
-          ? `http://localhost:4000/api/empleados/${empleado._id}/imagen`
+          ? `${API_BASE_URL}/empleados/${empleado._id}/imagen`
           : empleado.nombre?.charAt(0).toUpperCase() || null,
       });
     }

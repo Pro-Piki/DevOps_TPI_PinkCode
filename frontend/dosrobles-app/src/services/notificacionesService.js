@@ -1,7 +1,9 @@
 // src/services/notificacionesService.js
 // Servicio para gestionar notificaciones desde el frontend
 
-const API_URL = "http://localhost:4000/api/notificaciones";
+import API_BASE_URL from "../api/apiConfig";
+
+const API_URL = `${API_BASE_URL}/notificaciones`;
 
 export const notificacionesService = {
   // Obtener todas las notificaciones (para gerentes/admin)
@@ -9,9 +11,7 @@ export const notificacionesService = {
     try {
       const response = await fetch(`${API_URL}/todas`);
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
       return await response.json();
     } catch (error) {
@@ -25,9 +25,7 @@ export const notificacionesService = {
     try {
       const response = await fetch(`${API_URL}/empleado/${empleadoId}`);
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
       return await response.json();
     } catch (error) {
@@ -43,9 +41,7 @@ export const notificacionesService = {
         `${API_URL}/empleado/${empleadoId}/no-leidas`
       );
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
       return await response.json();
     } catch (error) {
@@ -57,14 +53,12 @@ export const notificacionesService = {
   // Crear una nueva notificación
   crearNotificacion: async (datosNotificacion) => {
     try {
-      // Obtener el token del localStorage
       const token = localStorage.getItem("token");
 
       const headers = {
         "Content-Type": "application/json",
       };
 
-      // Agregar el token en el header si existe
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       }
@@ -76,9 +70,7 @@ export const notificacionesService = {
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       return await response.json();
@@ -99,9 +91,7 @@ export const notificacionesService = {
       );
 
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       return await response.json();
@@ -111,7 +101,7 @@ export const notificacionesService = {
     }
   },
 
-  // Marcar todas las notificaciones de un empleado como leídas
+  // Marcar todas como leídas
   marcarTodasComoLeidas: async (empleadoId) => {
     try {
       const response = await fetch(
@@ -122,9 +112,7 @@ export const notificacionesService = {
       );
 
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       return await response.json();
@@ -145,9 +133,7 @@ export const notificacionesService = {
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       return await response.json();
@@ -157,7 +143,7 @@ export const notificacionesService = {
     }
   },
 
-  // Eliminar todas las notificaciones leídas de un empleado
+  // Eliminar todas las notificaciones leídas
   eliminarNotificacionesLeidas: async (empleadoId) => {
     try {
       const response = await fetch(
@@ -168,9 +154,7 @@ export const notificacionesService = {
       );
 
       if (!response.ok) {
-        throw new Error(
-          `Error ${response.status}: ${response.statusText}`
-        );
+        throw new Error(`Error ${response.status}: ${response.statusText}`);
       }
 
       return await response.json();

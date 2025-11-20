@@ -1,4 +1,8 @@
-const API_URL = "http://localhost:4000/api/documentos";
+// frontend/dosrobles-app/src/services/documentosService.js
+
+import API_BASE_URL from "../api/apiConfig";
+
+const API_URL = `${API_BASE_URL}/documentos`;
 
 export const documentosService = {
   // Obtener documentos del empleado
@@ -21,7 +25,6 @@ export const documentosService = {
   // Crear/subir nuevo documento con archivo
   crearDocumento: async (documentoData) => {
     try {
-      // Detectar si es FormData (para archivos) o JSON
       const isFormData = documentoData instanceof FormData;
 
       const response = await fetch(API_URL, {
@@ -43,7 +46,7 @@ export const documentosService = {
     }
   },
 
-  // Obtener documento por ID
+  // Obtener un documento por ID
   obtenerDocumentoById: async (id) => {
     try {
       const response = await fetch(`${API_URL}/${id}`);
@@ -60,16 +63,16 @@ export const documentosService = {
     }
   },
 
-  // Descargar documento (como blob para archivos binarios)
+  // Descargar archivo PDF
   descargarDocumento: async (id) => {
     try {
       const response = await fetch(`${API_URL}/${id}/descargar`);
 
       if (!response.ok) {
-        const contentType = response.headers.get('content-type');
+        const contentType = response.headers.get("content-type");
         let data;
 
-        if (contentType?.includes('application/json')) {
+        if (contentType?.includes("application/json")) {
           data = await response.json();
         } else {
           data = { message: await response.text() };
@@ -78,45 +81,33 @@ export const documentosService = {
         throw new Error(data.message || "Error al descargar documento");
       }
 
-      // Verificar que sea un PDF
-      const contentType = response.headers.get('content-type');
-      if (!contentType?.includes('application/pdf')) {
+      // Validar PDF
+      const contentType = response.headers.get("content-type");
+      if (!contentType?.includes("application/pdf")) {
         throw new Error("El archivo descargado no es un PDF válido");
       }
 
-      // Obtener el blob del archivo
       const blob = await response.blob();
 
-      // Obtener el nombre del archivo del header Content-Disposition si está disponible
-      const contentDisposition = response.headers.get('content-disposition');
-      let filename = 'documento.pdf';
+      // Nombre del archivo
+      const contentDisposition = response.headers.get("content-disposition");
+      let filename = "documento.pdf";
 
       if (contentDisposition) {
-        // Primero intentar capturar filename*=UTF-8''[encoded]
-        let filenameMatch = contentDisposition.match(/filename\*=UTF-8''(.+?)(?:;|$)/);
+        let match =
+          contentDisposition.match(/filename\*=UTF-8''(.+?)(?:;|$)/) ||
+          contentDisposition.match(/filename="?([^";]+)"?/);
 
-        if (filenameMatch && filenameMatch[1]) {
+        if (match && match[1]) {
           try {
-            // Decodificar URL encoding
-            filename = decodeURIComponent(filenameMatch[1]);
+            filename = decodeURIComponent(match[1]);
           } catch {
-            // Si falla, intentar el formato tradicional
-            filenameMatch = contentDisposition.match(/filename="?([^";]+)"?/);
-            if (filenameMatch) {
-              filename = filenameMatch[1];
-            }
-          }
-        } else {
-          // Intentar el formato tradicional: filename="nombre.pdf" o filename=nombre.pdf
-          filenameMatch = contentDisposition.match(/filename="?([^";]+)"?/);
-          if (filenameMatch) {
-            filename = filenameMatch[1];
+            filename = match[1];
           }
         }
 
-        // Asegurar que tenga extensión .pdf
-        if (!filename.endsWith('.pdf')) {
-          filename += '.pdf';
+        if (!filename.endsWith(".pdf")) {
+          filename += ".pdf";
         }
       }
 
