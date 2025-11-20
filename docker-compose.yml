@@ -1,21 +1,17 @@
-version: "3.9"
-
 services:
   backend:
     build: ./backend
     container_name: backend_rrhh
+    env_file:
+      - ./backend/.env   # ubicación del archivo .env
     ports:
-      - "4000:4000"
-    environment:
-      - PORT=4000
-      - JWT_SECRET=r4nd0mK3Y-segur4_jwt_123!
-      - MONGO_URI=mongodb+srv://dosrobles_user:8ZAlamo52@dosrobles-cluster.flebknw.mongodb.net/dosrobles_rrhh?retryWrites=true&w=majority&appName=dosrobles-cluster
+       - "4000:4000"    
     volumes:
       - ./backend:/app
       - /app/node_modules
 
   frontend:
-    build: ./frontend
+    build: ./frontend/dosrobles-app
     container_name: frontend_rrhh
     ports:
       - "3000:80"       # Frontend -> localhost:3000
