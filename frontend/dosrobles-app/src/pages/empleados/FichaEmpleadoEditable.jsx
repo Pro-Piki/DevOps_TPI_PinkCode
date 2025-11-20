@@ -5,7 +5,8 @@ import ModalDialog from "../../components/ui/ModalDialog";
 import FichaEmpleadoBase from "./FichaEmpleadoBase";
 import SendMessageModal from "../../components/modales/SendMessageModal";
 import { CircularProgress, Box } from "@mui/material";
-import API_BASE_URL from "../api/apiConfig.js";
+import API_BASE_URL from "../../api/apiConfig.js";
+
 
 const FichaEmpleadoEditable = ({ open, onClose, empleado, onEmpleadoActualizado }) => {
   const [empleadoData, setEmpleadoData] = useState(null);

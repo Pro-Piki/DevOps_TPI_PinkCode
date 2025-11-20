@@ -20,7 +20,8 @@ import {
 import NuevoUsuarioModal from "../../components/modales/NuevoUsuarioModal";
 import VerUsuarioModal from "../../components/modales/VerUsuarioModal";
 import EditarUsuarioModal from "../../components/modales/EditarUsuarioModal";
-import API_BASE_URL from "../api/apiConfig.js";
+import API_BASE_URL from "../../api/apiConfig.js";
+
 
 const UsuariosList = () => {
   const theme = useTheme();

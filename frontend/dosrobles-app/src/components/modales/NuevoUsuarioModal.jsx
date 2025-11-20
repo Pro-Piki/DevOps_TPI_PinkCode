@@ -6,7 +6,8 @@ import ModalDialog from "../ui/ModalDialog";
 import { PrimaryButton, SecondaryButton } from "../ui/Buttons";
 import BaseInput from "../ui/BaseInput";
 import SelectInput from "../ui/SelectInput";
-import API_BASE_URL from "../api/apiConfig.js";
+import API_BASE_URL from "../../api/apiConfig.js";
+
 
 const NuevoUsuarioModal = ({ open, onClose, onUsuarioGuardado }) => {
   const [formData, setFormData] = useState({

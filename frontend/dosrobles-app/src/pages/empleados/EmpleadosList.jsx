@@ -17,7 +17,8 @@ import {
 } from "../../components/ui/Buttons";
 import NuevoEmpleadoModal from "../../components/modales/NuevoEmpleadoModal";
 import FichaEmpleadoEditable from "./FichaEmpleadoEditable";
-import API_BASE_URL from "../api/apiConfig.js";
+import API_BASE_URL from "../../api/apiConfig.js";
+
 
 const EmpleadosList = () => {
   const theme = useTheme();

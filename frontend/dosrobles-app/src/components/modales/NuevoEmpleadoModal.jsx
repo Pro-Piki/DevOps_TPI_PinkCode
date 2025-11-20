@@ -16,7 +16,8 @@ import FormCard from "../ui/FormCard";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import API_BASE_URL from "../api/apiConfig.js";
+import API_BASE_URL from "../../api/apiConfig.js";
+
 
 const NuevoEmpleadoModal = ({ open, onClose, onEmpleadoGuardado }) => {
   const [step, setStep] = useState(1);

@@ -2,7 +2,8 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import FichaEmpleadoBase from "./FichaEmpleadoBase";
-import API_BASE_URL from "../api/apiConfig.js";
+import API_BASE_URL from "../../api/apiConfig.js";
+
 
 const FichaEmpleadoLectura = ({ open, onClose }) => {
   const [empleadoData, setEmpleadoData] = useState(null);

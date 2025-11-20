@@ -7,7 +7,8 @@ import BaseInput from "../ui/BaseInput";
 import SelectInput from "../ui/SelectInput";
 import { Avatar } from "@mui/material";
 import { Typography } from "@mui/material";
-import API_BASE_URL from "../api/apiConfig.js";
+import API_BASE_URL from "../../api/apiConfig.js";
+
 
 
 const VerUsuarioModal = ({ open, onClose, usuario, onEditar, onEliminar }) => {
