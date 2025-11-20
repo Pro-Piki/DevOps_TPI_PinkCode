@@ -11,14 +11,14 @@ RUN npm run build
 # Etapa 2 — Servir con NGINX en Render
 FROM nginx:stable-alpine
 
-# Copiar el build
+# Copiar build
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Render usa el puerto 10000
-EXPOSE 10000
-ENV PORT 10000
+# Copiar configuración personalizada
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Cambiar NGINX para escuchar en el puerto asignado por Render
-RUN sed -i 's/listen       80;/listen       10000;/' /etc/nginx/conf.d/default.conf
+# Render usa este puerto
+ENV PORT 10000
+EXPOSE 10000
 
 CMD ["nginx", "-g", "daemon off;"]
