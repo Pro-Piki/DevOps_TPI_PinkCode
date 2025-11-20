@@ -1,21 +1,24 @@
-# Etapa 1: Build
+# Etapa 1 — Build
 FROM node:18 AS build
-
 WORKDIR /app
 
 COPY package*.json ./
-
 RUN npm install
 
 COPY . .
-
 RUN npm run build
 
-# Etapa 2: Servir con NGINX
-FROM nginx:alpine
+# Etapa 2 — Servir con NGINX en Render
+FROM nginx:stable-alpine
 
+# Copiar el build
 COPY --from=build /app/dist /usr/share/nginx/html
 
-EXPOSE 80
+# Render usa el puerto 10000
+EXPOSE 10000
+ENV PORT 10000
+
+# Cambiar NGINX para escuchar en el puerto asignado por Render
+RUN sed -i 's/listen       80;/listen       10000;/' /etc/nginx/conf.d/default.conf
 
 CMD ["nginx", "-g", "daemon off;"]
