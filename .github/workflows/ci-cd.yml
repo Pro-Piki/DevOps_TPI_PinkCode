@@ -83,15 +83,24 @@ jobs:
       - name: Instalar Render CLI
         run: npm install -g @render/render-cli
 
+      # Deploy Backend en Render usando API
       - name: Deploy Backend en Render
-        run: render deploy --service-id ${{ secrets.RENDER_BACKEND_ID }} --wait
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"serviceId": "${{ secrets.RENDER_BACKEND_ID }}"}' \
+            https://api.render.com/v1/services/${{ secrets.RENDER_BACKEND_ID }}/deploys
 
+      # Deploy Frontend en Render usando API
       - name: Deploy Frontend en Render
-        run: render deploy --service-id ${{ secrets.RENDER_FRONTEND_ID }} --wait
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}      
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"serviceId": "${{ secrets.RENDER_FRONTEND_ID }}"}' \
+            https://api.render.com/v1/services/${{ secrets.RENDER_FRONTEND_ID }}/deploys
+     
 
       - name: Finalizado
         run: echo "Imágenes subidas correctamente a Docker Hub y servicios desplegados en Render"
