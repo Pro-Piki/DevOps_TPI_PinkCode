@@ -32,7 +32,7 @@ jobs:
         run: npm ci
       - name: Ejecutar tests
         working-directory: ./backend
-        run: echo "Sin tests configurados todavía"
+        run: npm test
 
   build_and_push:
     name: Construir imágenes y subir a Docker Hub
