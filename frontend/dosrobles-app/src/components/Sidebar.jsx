@@ -78,7 +78,7 @@ const Sidebar = forwardRef(({ className, onItemClick }, ref) => {
                 <img
                   src={`${API_BASE_URL}/empleados/${user.empleado._id}/imagen`}
                   alt="Perfil"
-                  style={{ width: "80px", height: "80px" }}
+                  style={{ width: "80px", height: "80px", borderRadius: "50%" }}
                   className={styles.avatarImg}
                 />
               ) : (
