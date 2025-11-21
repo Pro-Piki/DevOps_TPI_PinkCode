@@ -20,6 +20,9 @@ jobs:
   tests:
     name: Correr tests del backend
     runs-on: ubuntu-latest
+    env:
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+      NODE_ENV: test
     steps:
       - name: Descargar repositorio
         uses: actions/checkout@v4
