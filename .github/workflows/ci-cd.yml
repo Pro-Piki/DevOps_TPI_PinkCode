@@ -1,4 +1,5 @@
-name: CI/CD - Build, Test y Deploy con Docker
+name: CI/CD - Build, Test, Deploy con Docker y Render
+
 
 on:
   push:
@@ -38,7 +39,7 @@ jobs:
         run: echo "Sin tests configurados todavía"
 
   build_and_push:
-    name: Construir imágenes y subirlas a Docker Hub
+    name: Construir imágenes, subir a Docker Hub y desplegar en Render
     needs: tests
     runs-on: ubuntu-latest
 
@@ -78,5 +79,19 @@ jobs:
           tags: |
             ${{ env.FRONTEND_IMAGE }}:latest
 
+      # Deploy en Render usando CLI
+      - name: Instalar Render CLI
+        run: npm install -g @render/render-cli
+
+      - name: Deploy Backend en Render
+        run: render deploy --service-id ${{ secrets.RENDER_BACKEND_ID }} --wait
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+
+      - name: Deploy Frontend en Render
+        run: render deploy --service-id ${{ secrets.RENDER_FRONTEND_ID }} --wait
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}      
+
       - name: Finalizado
-        run: echo "Imágenes subidas correctamente a Docker Hub"
+        run: echo "Imágenes subidas correctamente a Docker Hub y servicios desplegados en Render"
