@@ -13,7 +13,7 @@ export const FichajeProvider = ({ children }) => {
   // Función para actualizar el estado del equipo
   const fetchEstadoEquipo = useCallback(async () => {
     try {
-      const res = await fetch(`${API_BASE}/api/fichajes/estado`);
+      const res = await fetch(`${API_BASE}/fichajes/estado`);
       if (res.ok) {
         const data = await res.json();
         setEstadoEquipo(data);

@@ -45,7 +45,7 @@ export default function FichajeCard() {
   useEffect(() => {
     async function checkActiveFichaje() {
       try {
-        const res = await fetch(`${API_BASE}/api/fichajes/empleado/${empleadoId}`);
+        const res = await fetch(`${API_BASE}/fichajes/empleado/${empleadoId}`);
         if (res.ok) {
           const data = await res.json();
           const fichajes = Array.isArray(data) ? data : data.data || [];
@@ -117,7 +117,7 @@ export default function FichajeCard() {
         const horaEntrada = formatHHMM();
 
         try {
-          const res = await fetch(`${API_BASE}/api/fichajes/inicio`, {
+          const res = await fetch(`${API_BASE}/fichajes/inicio`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -188,7 +188,7 @@ export default function FichajeCard() {
         const horaSalida = formatHHMM();
 
         try {
-          const res = await fetch(`${API_BASE}/api/fichajes/salida`, {
+          const res = await fetch(`${API_BASE}/fichajes/salida`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

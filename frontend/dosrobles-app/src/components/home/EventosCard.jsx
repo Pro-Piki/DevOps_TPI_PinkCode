@@ -45,7 +45,7 @@ export default function EventosCard() {
   useEffect(() => {
     async function fetchEventos() {
       try {
-        const res = await fetch(`${API_BASE}/api/eventos`);
+        const res = await fetch(`${API_BASE}/eventos`);
         const data = await res.json();
         if (res.ok) setEventos(data.data || []);
       } catch (err) {
@@ -86,7 +86,7 @@ export default function EventosCard() {
       if (editIndex !== null) {
         // --- MODO EDICIÓN ---
         const eventoEditado = { ...formEvento, _id: eventos[editIndex]._id };
-        const res = await fetch(`${API_BASE}/api/eventos/${eventoEditado._id}`, {
+        const res = await fetch(`${API_BASE}/eventos/${eventoEditado._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(eventoEditado),
@@ -106,7 +106,7 @@ export default function EventosCard() {
         });
       } else {
         // --- MODO CREACIÓN ---
-        const res = await fetch(`${API_BASE}/api/eventos`, {
+        const res = await fetch(`${API_BASE}/eventos`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formEvento),
@@ -166,7 +166,7 @@ export default function EventosCard() {
     const { index, evento } = eventoToDelete;
 
     try {
-      const res = await fetch(`${API_BASE}/api/eventos/${evento._id}`, {
+      const res = await fetch(`${API_BASE}/eventos/${evento._id}`, {
         method: "DELETE",
       });
       const data = await res.json();

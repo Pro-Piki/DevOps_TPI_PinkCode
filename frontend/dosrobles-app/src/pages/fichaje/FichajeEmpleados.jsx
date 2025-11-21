@@ -145,7 +145,7 @@ const FichajeEmpleados = () => {
     setApprovingLoading(true);
     try {
       const mesNumero = meses.indexOf(mes) + 1;
-      const response = await fetch(`${API_BASE}/api/fichajes/aprobar`, {
+      const response = await fetch(`${API_BASE}/fichajes/aprobar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

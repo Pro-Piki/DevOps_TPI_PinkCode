@@ -1,5 +1,5 @@
 // frontend/dosrobles-app/src/services/fichajesService.js
-const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000") + "/api/fichajes";
+const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:4000") + "/fichajes";
 
 export async function getFichajesPorEmpleado(empleadoId) {
   const res = await fetch(`${API_URL}/empleado/${empleadoId}`);

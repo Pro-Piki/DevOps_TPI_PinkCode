@@ -73,7 +73,7 @@ export default function CalculoHaberes() {
       const [mes, anio] = periodoSeleccionado.split("-");
       const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
       const respuestaAprobaciones = await fetch(
-        `${API_BASE}/api/fichajes/aprobaciones/mes?mes=${mes}&anio=${anio}`
+        `${API_BASE}/fichajes/aprobaciones/mes?mes=${mes}&anio=${anio}`
       );
       const aprobacionesData = respuestaAprobaciones.ok ? await respuestaAprobaciones.json() : { data: [] };
       const aprobaciones = aprobacionesData.data || [];
