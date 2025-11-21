@@ -79,10 +79,6 @@ jobs:
           tags: |
             ${{ env.FRONTEND_IMAGE }}:latest
 
-      # Deploy en Render usando CLI
-      - name: Instalar Render CLI
-        run: npm install -g @render/render-cli
-
       # Deploy Backend en Render usando API
       - name: Deploy Backend en Render
         run: |
