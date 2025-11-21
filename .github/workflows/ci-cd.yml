@@ -1,85 +1,57 @@
-name: CI/CD - Build, Test, Deploy con Docker y Render
-
-
-on:
-  push:
-    branches:
-      - main
-      - dev
-      - "dev/**"
-      - "feature/**"
-  pull_request:
-    branches:
-      - main
-
-env:
-  BACKEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/dosrobles-backend
-  FRONTEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/dosrobles-frontend
-
 jobs:
   tests:
     name: Correr tests del backend
     runs-on: ubuntu-latest
-
     steps:
       - name: Descargar repositorio
         uses: actions/checkout@v4
-
       - name: Usar Node 18
         uses: actions/setup-node@v4
         with:
           node-version: 18
-
       - name: Instalar dependencias backend
         working-directory: ./backend
         run: npm ci
-
       - name: Ejecutar tests
         working-directory: ./backend
         run: echo "Sin tests configurados todavía"
 
   build_and_push:
-    name: Construir imágenes, subir a Docker Hub y desplegar en Render
+    name: Construir imágenes y subir a Docker Hub
     needs: tests
     runs-on: ubuntu-latest
-
     steps:
       - name: Descargar repositorio
         uses: actions/checkout@v4
-
       - name: Configurar QEMU
         uses: docker/setup-qemu-action@v3
-
       - name: Configurar Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Login en Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      # Backend
       - name: Construir y subir imagen BACKEND
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: |
-            ${{ env.BACKEND_IMAGE }}:latest
-
-      # Frontend
+          tags: ${{ env.BACKEND_IMAGE }}:latest
       - name: Construir y subir imagen FRONTEND
         uses: docker/build-push-action@v5
         with:
           context: ./frontend/dosrobles-app
           file: ./frontend/dosrobles-app/Dockerfile
           push: true
-          tags: |
-            ${{ env.FRONTEND_IMAGE }}:latest
+          tags: ${{ env.FRONTEND_IMAGE }}:latest
 
-      # Deploy Backend en Render usando API
+  deploy:
+    name: Desplegar en Render
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy Backend en Render
         run: |
           curl -X POST \
@@ -87,8 +59,6 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"serviceId": "${{ secrets.RENDER_BACKEND_ID }}"}' \
             https://api.render.com/v1/services/${{ secrets.RENDER_BACKEND_ID }}/deploys
-
-      # Deploy Frontend en Render usando API
       - name: Deploy Frontend en Render
         run: |
           curl -X POST \
@@ -96,7 +66,5 @@ jobs:
             -H "Content-Type: application/json" \
             -d '{"serviceId": "${{ secrets.RENDER_FRONTEND_ID }}"}' \
             https://api.render.com/v1/services/${{ secrets.RENDER_FRONTEND_ID }}/deploys
-     
-
       - name: Finalizado
-        run: echo "Imágenes subidas correctamente a Docker Hub y servicios desplegados en Render"
+        run: echo "Servicios desplegados en Render"
