@@ -38,6 +38,9 @@ automatizar, testear y desplegar una aplicación real en un entorno CI/CD.
 ## Estructura del proyecto
 ```
 PPIV_DosRobles_RRHH/
+├── .github/
+│ ├── workflows/
+│ │ ├── ci-cd.yml
 ├── backend/ → API REST (Node.js + Express + MongoDB Atlas)
 │ ├── _test_
 │ │ ├── controllers
@@ -50,10 +53,12 @@ PPIV_DosRobles_RRHH/
 │ │ ├── models/
 │ │ ├── routes/
 │ │ └── server.js
-│ ├── uploads
-│ │ ├──documentos
-│ ├──.env
-│ ├──jest.config.js
+│ ├── uploads/
+│ │ ├── documentos/
+│ ├── .env
+│ ├── dockerfile
+│ ├── jest.config.js
+│ ├── metrics.js
 │ ├── package-lock.json
 │ └── package.json
 ├── frontend/ → Aplicación web (React + Vite + MUI)
@@ -64,7 +69,6 @@ PPIV_DosRobles_RRHH/
 │ │ │  ├── assets
 │ │ │  ├── components
 │ │ │  ├── context
-│ │ │  ├── hooks
 │ │ │  ├── layouts
 │ │ │  ├── pages
 │ │ │  ├── services
@@ -74,17 +78,23 @@ PPIV_DosRobles_RRHH/
 │ │ │  ├── App.jsx
 │ │ │  ├── index.css
 │ │ │  ├── main.jsx
+│ │ ├── .env
 │ │ ├── .gitignore
+│ │ ├── dockerfile
 │ │ ├── eslint.config.js
 │ │ ├── index.html
+│ │ ├── nginx.conf
 │ │ ├── package-lock.json
 │ │ ├── package.json
 │ │ ├── README.md
 │ │ ├── vite.config.js
 │ ├── package-lock.json
+├── terraform/
 ├── .gitignore
+├── docker-compose.yml
 ├── package-lock.json
 ├── package.json
+├── prometheus.yml
 └── README.md
 
 ```
@@ -97,12 +107,14 @@ PPIV_DosRobles_RRHH/
 - **npm:** v8 o superior (incluido con Node.js)
 - **MongoDB:** v6 o superior (local o Atlas)
 - **Git:** Para control de versiones
+- **Docker Desktop** Para ejecutar localmente con docker
 - **Navegador moderno**
 
 ---
 
 ## Instalación y ejecución
 
+Seguir los pasos en la documentación por favor.
 
 
 ---
