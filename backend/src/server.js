@@ -14,6 +14,7 @@ import notificacionesRoutes from "./routes/notificaciones.routes.js";
 import documentosRoutes from "./routes/documentos.routes.js";
 import fichajesRoutes from "./routes/fichajes.routes.js";
 import eventosRoutes from "./routes/eventos.routes.js";
+import metricsRouter from "../metrics.js";
 
 const app = express();
 
@@ -56,6 +57,9 @@ app.use("/api/documentos", documentosRoutes);
 app.use("/api/fichajes", fichajesRoutes);
 app.use("/api/eventos", eventosRoutes);
 app.use("/api/users", authRoutes);
+
+// Metrics http://localhost:4000/metrics
+app.use(metricsRouter);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 4000;
