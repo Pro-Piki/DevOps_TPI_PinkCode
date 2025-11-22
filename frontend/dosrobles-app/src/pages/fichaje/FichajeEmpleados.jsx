@@ -11,7 +11,7 @@ import {
   Alert,
 } from "@mui/material";
 import { NextButton, PrimaryButton } from "../../components/ui/Buttons";
-import CheckBoxInput from "../../components/ui/CheckBoxInput";
+import CheckBox from "../../components/ui/CheckBox";
 import CustomTable from "../../components/ui/CustomTable";
 import SearchBar from "../../components/ui/SearchBar";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
@@ -167,7 +167,7 @@ const FichajeEmpleados = () => {
         Aprobado
       </Typography>
     ) : (
-      <CheckBoxInput
+      <CheckBox
         checked={!!selected[f.idEmpleado]}
         onChange={(e) =>
           setSelected((prev) => ({

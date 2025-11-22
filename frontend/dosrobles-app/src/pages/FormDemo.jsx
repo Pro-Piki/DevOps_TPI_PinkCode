@@ -4,7 +4,7 @@ import { Box, Stack } from "@mui/material";
 import FormCard from "../components/ui/FormCard";
 import BaseInput from "../components/ui/BaseInput";
 import SelectInput from "../components/ui/SelectInput";
-import CheckBoxInput from "../../components/ui/CheckBoxInput";
+import CheckBox from "../components/ui/CheckBox";
 import DateField from "../components/ui/DateField";
 import TextInput from "../components/ui/TextInput";
 import TextareaInput from "../components/ui/TextareaInput";
@@ -78,7 +78,7 @@ export default function FormDemo() {
               icon={<WorkIcon sx={{ color: "#7FC6BA" }} />}
             />
 
-            <CheckBoxInput
+            <CheckBox
               label="Acepto los términos y condiciones"
               checked={terms}
               onChange={(e) => setTerms(e.target.checked)}
