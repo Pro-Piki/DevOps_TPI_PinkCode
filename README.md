@@ -89,6 +89,7 @@ PPIV_DosRobles_RRHH/
 │ │ ├── README.md
 │ │ ├── vite.config.js
 │ ├── package-lock.json
+├── img/
 ├── terraform/
 ├── .gitignore
 ├── docker-compose.yml
@@ -116,5 +117,33 @@ PPIV_DosRobles_RRHH/
 
 Seguir los pasos en la documentación por favor.
 
+---
+
+## CI/CD 
+
+Diagrama del pipeline del workflows
+
+![Pipeline](/img/pipeline.png)
+
+---
+
+## Terraform - Infraestructura como Código
+
+Durante la implementación se encontró una limitación crítica: Render no permite crear servicios gratuitos mediante su API/Terraform. Al intentar ejecutar terraform apply, se obtuvo el error: "free plan servers are not supported".
+Aunque la configuración de Terraform está completa y validada, el despliegue automático solo funciona con planes de pago.
+Igualmente se proporciona toda la infraestructura documentada como código, versionada en Git y lista para ser desplegada automáticamente cuando se migre a un plan de pago o se importen servicios existentes.
+
+---
+
+## Monitoreo: Prometheus + Grafana
+
+La aplicación expone métricas en `http://localhost:4000/metrics` usando `prom-client`.  
+Prometheus recolecta estas métricas y Grafana permite visualizarlas en dashboards personalizados.
+
+![Grafana](/img/grafana.png)
+
+![Prometheus](/img/prometheus.png)
+
+![Prom.Graph](/img/prometheus.graph.png)
 
 ---
