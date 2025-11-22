@@ -89,6 +89,7 @@ PPIV_DosRobles_RRHH/
 │ │ ├── README.md
 │ │ ├── vite.config.js
 │ ├── package-lock.json
+├── terraform/
 ├── .gitignore
 ├── docker-compose.yml
 ├── package-lock.json
