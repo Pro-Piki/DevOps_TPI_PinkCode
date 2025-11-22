@@ -69,15 +69,6 @@ const calcularComponentes = async (empleado, diasTrabajados, horasExtras) => {
   const sueldoBasico = empleado.sueldoBruto || empleado.sueldoBasico || 0;
   const diasDelMes = 22; // Promedio de días laborales
 
-  console.log("💰 [calcularComponentes] empleado:", {
-    nombre: empleado.nombre,
-    sueldoBruto: empleado.sueldoBruto,
-    sueldoBasico: empleado.sueldoBasico,
-    sueldoUsado: sueldoBasico,
-    diasTrabajados,
-    horasExtras,
-  });
-
   // Validar que sueldoBasico sea un número válido
   if (!sueldoBasico || isNaN(sueldoBasico) || sueldoBasico <= 0) {
     throw new Error(`Sueldo básico inválido: ${sueldoBasico}. Empleado debe tener sueldoBruto definido.`);
@@ -552,7 +543,6 @@ export const aprobarNomina = async (req, res) => {
     await nomina.save();
 
     // Crear notificación para el empleado
-    console.log("📬 [aprobarNomina] Creando notificación para empleado:", nomina.empleadoId);
     const notificacionCreada = await Notificacion.create({
       empleadoId: nomina.empleadoId,
       tipo: "aprobacion",
@@ -560,7 +550,6 @@ export const aprobarNomina = async (req, res) => {
       descripcion: `Tu nómina del período ${nomina.periodo} ha sido aprobada. Ya puedes descargar tu recibo de haberes desde la sección "Mis Documentos".`,
       leida: false,
     });
-    console.log("✅ [aprobarNomina] Notificación creada:", notificacionCreada._id);
 
     await nomina.populate([
       { path: "empleadoId", select: "nombre apellido legajo" },

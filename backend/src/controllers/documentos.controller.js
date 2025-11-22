@@ -16,11 +16,6 @@ export const obtenerTodosLosDocumentos = async (req, res) => {
       fechaCarga: -1,
     });
 
-    console.log("🔍 DEBUG: Total documentos en BD:", documentos.length);
-    documentos.forEach((doc, idx) => {
-      console.log(`  [${idx + 1}] empleadoId:`, doc.empleadoId?._id || doc.empleadoId, "- archivo:", doc.nombreArchivo);
-    });
-
     return res.status(200).json({
       success: true,
       data: documentos,
@@ -40,8 +35,6 @@ export const obtenerTodosLosDocumentos = async (req, res) => {
 export const obtenerDocumentos = async (req, res) => {
   try {
     const { empleadoId } = req.query;
-
-    console.log("📋 GET /documentos - empleadoId:", empleadoId);
 
     if (!empleadoId) {
       return res.status(400).json({
@@ -63,8 +56,6 @@ export const obtenerDocumentos = async (req, res) => {
     const documentos = await Documento.find({ empleadoId }).sort({
       fechaCarga: -1,
     });
-
-    console.log(`✅ Documentos encontrados para empleado ${empleadoId}:`, documentos.length);
 
     return res.status(200).json({
       success: true,
@@ -96,13 +87,6 @@ export const crearDocumento = async (req, res) => {
     const tipoDocumento = obtenerCampo(req.body, "tipoDocumento");
     const tipoNombre = obtenerCampo(req.body, "tipoNombre");
     const descripcion = obtenerCampo(req.body, "descripcion");
-
-    console.log("📤 POST /documentos - Datos recibidos:", {
-      empleadoId,
-      tipoDocumento,
-      tipoNombre,
-      archivo: archivo?.originalname,
-    });
 
     // Validar entrada
     if (!empleadoId || !tipoDocumento || !tipoNombre) {
@@ -145,7 +129,6 @@ export const crearDocumento = async (req, res) => {
     // Crear directorio si no existe
     if (!fs.existsSync(UPLOAD_DIR)) {
       fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-      console.log("📁 Directorio creado:", UPLOAD_DIR);
     }
 
     // Generar nombre único para el archivo
@@ -247,8 +230,6 @@ export const descargarDocumento = async (req, res) => {
       "Content-Disposition",
       `attachment; filename*=UTF-8''${nombreEncodeado}`
     );
-
-    console.log("📥 [descargarDocumento] Content-Disposition:", `attachment; filename*=UTF-8''${nombreEncodeado}`);
 
     // Leer y enviar el archivo
     const fileStream = fs.createReadStream(documento.rutaArchivo);

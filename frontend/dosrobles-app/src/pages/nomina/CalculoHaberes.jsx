@@ -50,9 +50,7 @@ export default function CalculoHaberes() {
       setError(null);
 
       // Obtener empleados activos
-      console.log("📋 [cargarDatos] Obteniendo empleados activos...");
       const respuestaEmpleados = await empleadosService.obtenerEmpleadosActivos();
-      console.log("📋 [cargarDatos] respuestaEmpleados:", respuestaEmpleados);
 
       // Manejar tanto arrays directos como objetos con .data
       let empleadosActivos = [];
@@ -61,7 +59,6 @@ export default function CalculoHaberes() {
       } else if (respuestaEmpleados?.data) {
         empleadosActivos = respuestaEmpleados.data;
       }
-      console.log("📋 [cargarDatos] empleadosActivos.length:", empleadosActivos.length);
 
       // Obtener nóminas del período seleccionado
       const respuestaNominas = await nominaService.obtenerNominas({
@@ -73,7 +70,7 @@ export default function CalculoHaberes() {
       const [mes, anio] = periodoSeleccionado.split("-");
       const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:4000";
       const respuestaAprobaciones = await fetch(
-        `${API_BASE}/fichajes/aprobaciones/mes?mes=${mes}&anio=${anio}`
+        `${API_BASE}/api/fichajes/aprobaciones/mes?mes=${mes}&anio=${anio}`
       );
       const aprobacionesData = respuestaAprobaciones.ok ? await respuestaAprobaciones.json() : { data: [] };
       const aprobaciones = aprobacionesData.data || [];
@@ -98,19 +95,6 @@ export default function CalculoHaberes() {
             ? a.empleadoId._id.toString()
             : a.empleadoId.toString();
           return aprobacionEmpleadoId === emp._id.toString();
-        });
-
-        console.log("📋 [empleadoConNomina] emp:", {
-          _id: emp._id,
-          numeroLegajo: emp.numeroLegajo,
-          nombre: emp.nombre,
-          apellido: emp.apellido,
-          puesto: emp.puesto,
-          sueldoBruto: emp.sueldoBruto,
-          email: emp.email,
-          tieneNomina: !!nomina,
-          estadoNomina: nomina?.estado,
-          tieneAprobacion: !!aprobacion,
         });
 
         // El estado viene de la NÓMINA, no de la aprobación
@@ -256,12 +240,18 @@ export default function CalculoHaberes() {
     }
   };
 
-  // Manejar aprobación
   const handleAprobar = async (empleado) => {
     try {
       setCargando(true);
-      // TODO: Obtener userId del contexto
-      const aprobadoPor = "69013e9b612504e825813aee"; // ID de prueba
+
+      const user = JSON.parse(localStorage.getItem("user"));
+      const aprobadoPor = user?.empleadoId || user?.id;
+
+      if (!aprobadoPor) {
+        alert("No se pudo identificar al usuario que aprueba. Por favor, inicia sesión nuevamente.");
+        setCargando(false);
+        return;
+      }
 
       const respuesta = await nominaService.aprobarNomina(
         empleado.nominaId,
@@ -475,9 +465,6 @@ export default function CalculoHaberes() {
           <Box sx={{ display: "flex", gap: 2, mb: 3, flexWrap: "wrap", alignItems: "center" }}>
             {/* Selector de Período */}
             <FormControl sx={{ minWidth: 200 }}>
-              <Typography sx={{ fontSize: "0.85rem", color: "#808080", mb: 0.5 }}>
-                Período
-              </Typography>
               <Select
                 value={periodoSeleccionado}
                 onChange={(e) => setPeriodoSeleccionado(e.target.value)}
