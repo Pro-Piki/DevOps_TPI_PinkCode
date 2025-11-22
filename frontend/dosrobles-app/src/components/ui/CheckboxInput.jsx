@@ -8,7 +8,7 @@ import {
 import CheckIcon from "@mui/icons-material/Check";
 
 /**
- * CheckboxInput
+ * CheckBoxInput
  * Reutilizable para opciones booleanas o toggles simples.
  *
  * Props:
@@ -19,7 +19,7 @@ import CheckIcon from "@mui/icons-material/Check";
  * - error: boolean → indica estado de error (opcional)
  */
 
-export default function CheckboxInput({
+export default function CheckBoxInput({
   label,
   checked,
   onChange,
@@ -32,7 +32,7 @@ export default function CheckboxInput({
         sx={{
           display: "flex",
           alignItems: "center",
-          ml:4,
+          ml: 4,
         }}
       >
         <FormControlLabel
