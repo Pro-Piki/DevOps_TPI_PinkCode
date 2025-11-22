@@ -4,7 +4,7 @@ import { Box, Stack } from "@mui/material";
 import FormCard from "../components/ui/FormCard";
 import BaseInput from "../components/ui/BaseInput";
 import SelectInput from "../components/ui/SelectInput";
-import CheckBoxInput from "../components/ui/CheckBoxInput";
+import CheckBoxInput from "../../components/ui/CheckBoxInput";
 import DateField from "../components/ui/DateField";
 import TextInput from "../components/ui/TextInput";
 import TextareaInput from "../components/ui/TextareaInput";
