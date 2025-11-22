@@ -64,11 +64,11 @@ const FichajeEmpleados = () => {
 
 
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:4000/api";
 
 
   async function aprobarFichajeService(payload) {
-    const res = await fetch(`${API_URL}/api/fichajes/aprobar`, {
+    const res = await fetch(`${API_URL}/fichajes/aprobar`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
@@ -88,7 +88,7 @@ const FichajeEmpleados = () => {
       try {
         const mesNumero = meses.indexOf(mes) + 1;
         const res = await fetch(
-          `${API_URL}/api/fichajes/empleados-mes?mes=${mesNumero}&anio=${anio}`
+          `${API_URL}/fichajes/empleados-mes?mes=${mesNumero}&anio=${anio}`
         );
 
         if (!res.ok) throw new Error("Error al obtener fichajes");
@@ -117,7 +117,7 @@ const FichajeEmpleados = () => {
       try {
         const mesNumero = meses.indexOf(mes) + 1;
         const res = await fetch(
-          `${API_URL}/api/fichajes/aprobaciones/mes?mes=${mesNumero}&anio=${anio}`
+          `${API_URL}/fichajes/aprobaciones/mes?mes=${mesNumero}&anio=${anio}`
         );
 
         if (res.ok) {

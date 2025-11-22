@@ -108,7 +108,7 @@ const HistorialFichajes = () => {
           } else {
             // Si no, hacer fetch al endpoint de empleados
             const API_BASE =
-              import.meta.env.VITE_API_URL || "http://localhost:4000";
+              import.meta.env.VITE_API_URL || "http://localhost:4000/api";
             const empleadoResponse = await fetch(
               `${API_BASE}/empleados/${idFinal}`
             );
@@ -412,11 +412,10 @@ const HistorialFichajes = () => {
           sx={{ fontWeight: 600, color: "#585858", mb: 1 }}
         >
           {isAdminView
-            ? `Historial de ${
-                empleado
-                  ? `${empleado.nombre} ${empleado.apellido}`
-                  : "Empleado"
-              }`
+            ? `Historial de ${empleado
+              ? `${empleado.nombre} ${empleado.apellido}`
+              : "Empleado"
+            }`
             : "Mis Fichajes"}
         </Typography>
         {isAdminView ? (
@@ -585,8 +584,8 @@ const HistorialFichajes = () => {
         content={
           fichajeToDelete
             ? `¿Estás seguro de que deseas eliminar el fichaje del ${new Date(
-                fichajeToDelete.fecha
-              ).toLocaleDateString("es-AR")}?`
+              fichajeToDelete.fecha
+            ).toLocaleDateString("es-AR")}?`
             : "¿Estás seguro de que deseas eliminar este fichaje?"
         }
         actions={[
